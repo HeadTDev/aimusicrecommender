@@ -104,8 +104,15 @@ if submit_button:
         # Find the artist for the recommended song
         song_row = song_metadata[song_metadata['Song_Name'] == song_name]
         if not song_row.empty:
-            artist_name = song_row['Artist'].values[0]
-            st.success(f"🎶 Recommended Song: {song_name} by {artist_name}")
+            spotify_url = song_row['Spotify_URL'].values[0]
+            # Show as clickable link
+            st.markdown(f"[Listen on Spotify]({spotify_url})")
+            # Or embed Spotify player (optional, works in most browsers)
+            st.markdown(
+                f'<iframe src="https://open.spotify.com/embed/track/{spotify_url.split("/")[-1]}" '
+                'width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>',
+                unsafe_allow_html=True
+            )
         else:
             st.success(f"🎶 Recommended Song: {song_name} (artist unknown)")
     except Exception as e:

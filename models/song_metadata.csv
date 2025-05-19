@@ -1,9 +1,9 @@
-Song_Name,Artist
-Clair de Lune,Debussy
-Eye of the Tiger,Survivor
-Fix You,Coldplay
-Happy,Pharrell Williams
-Someone Like You,Adele
-Stronger,Kanye West
-Uptown Funk,Bruno Mars
-Weightless,Marconi Union
+Song_Name,Artist,Spotify_URL
+Clair de Lune,Debussy,https://open.spotify.com/track/3v8F3q5wqKxayIMjA9Tu6P
+Eye of the Tiger,Survivor,https://open.spotify.com/track/2KH16WveTQWT6KOG9Rg6e2
+Fix You,Coldplay,https://open.spotify.com/track/6KuQTIu1KoTTkLXKrwlLPV
+Happy,Pharrell Williams,https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH
+Someone Like You,Adele,https://open.spotify.com/track/4kflIGfjdZJW4ot2ioixTB
+Stronger,Kanye West,https://open.spotify.com/track/5v4GgrXPMghOnBBLmveLac
+Uptown Funk,Bruno Mars,https://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS
+Weightless,Marconi Union,https://open.spotify.com/track/6ZRuF2n1CQxyxxAAWsKJOy
