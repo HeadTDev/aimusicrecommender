@@ -98,8 +98,7 @@ if st.button("Suggest a Song", key="suggest", help="Get a song recommendation!",
             f"""
             <iframe src="https://open.spotify.com/embed/track/{track_id}"
             width="100%" height="80" frameborder="0"
-            allowtransparency="true" allow="encrypted-media"
-            style="min-width:0;width:100%;"></iframe>
+            allowtransparency="true" allow="encrypted-media"></iframe>
             """,
             unsafe_allow_html=True,
         )
