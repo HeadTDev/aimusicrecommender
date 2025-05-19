@@ -98,12 +98,13 @@ if st.button("Suggest a Song", key="suggest", help="Get a song recommendation!",
             f"""
             <iframe src="https://open.spotify.com/embed/track/{track_id}"
             width="100%" height="80" frameborder="0"
-            allowtransparency="true" allow="encrypted-media"></iframe>
+            allowtransparency="true" allow="encrypted-media"
+            style="min-width:0;width:100%;"></iframe>
             """,
             unsafe_allow_html=True,
         )
     elif spotify_url:
-        st.markdown(f"[Listen on Spotify]({spotify_url})")
+        st.markdown(f"[Listen on Spotify]")
     else:
         st.warning("No Spotify link found for this song. Try another!")
 
