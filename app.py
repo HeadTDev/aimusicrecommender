@@ -84,11 +84,8 @@ def preprocess_user_input(
     X_input = pd.concat([numeric_df, artist_onehot, genre_onehot, mood_df, tfidf_df], axis=1)
     
     # Add any missing columns (shouldn't be needed if using correct columns, but for robustness)
-    for col in expected_columns:
-        if col not in X_input.columns:
-            X_input[col] = 0
-    # Ensure column order
-    X_input = X_input[expected_columns]
+    X_input = X_input.reindex(columns=expected_columns, fill_value=0)
+    
     return X_input
 
 # --- Predict and Display ---
