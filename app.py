@@ -13,9 +13,16 @@ def load_model_objects():
     mood_encoder = joblib.load('models/mood_encoder.pkl')
     tfidf = joblib.load('models/tfidf_vectorizer.pkl')
     expected_columns = joblib.load('models/expected_columns.pkl')
-    return rf_clf, xgb_clf, lgbm_clf, label_encoder, mood_encoder, tfidf, expected_columns
+    # Load song metadata: dataframe with columns ['Song_Name', 'Artist']
+    song_metadata = pd.read_csv('models/song_metadata.csv')  # <-- Ensure this file exists
+    return rf_clf, xgb_clf, lgbm_clf, label_encoder, mood_encoder, tfidf, expected_columns, song_metadata
 
-rf_clf, xgb_clf, lgbm_clf, label_encoder, mood_encoder, tfidf, expected_columns = load_model_objects()
+rf_clf, xgb_clf, lgbm_clf, label_encoder, mood_encoder, tfidf, expected_columns, song_metadata = load_model_objects()
+
+# --- Genre Dropdown Options ---
+genre_names = [
+    'Ambient', 'Classical', 'Funk', 'Hip-Hop', 'Pop', 'Rock'
+]
 
 # --- UI Header ---
 st.title("🎵 Song Recommendation App")
@@ -25,9 +32,10 @@ st.write("Get a song recommendation based on your current mood and preferences!"
 with st.form(key='input_form'):
     user_text = st.text_input("How do you feel? (Describe your mood)", value="I'm feeling happy and energetic!")
     
-    # Artist and Genre options (suggest user to type, or populate from training set if available)
+    # Artist free text
     user_artist = st.text_input("Who is your favorite artist?", value="Coldplay")
-    user_genre = st.text_input("Preferred genre?", value="Pop")
+    # Genre dropdown
+    user_genre = st.selectbox("Preferred genre?", genre_names)
     
     user_tempo = st.number_input("Tempo (BPM):", min_value=40, max_value=220, value=120, step=1)
     user_energy = st.slider("Energy (0.0 = calm, 1.0 = energetic):", min_value=0.0, max_value=1.0, value=0.7, step=0.01)
@@ -101,7 +109,14 @@ if submit_button:
         # Predict
         y_pred = clf.predict(X_input)
         song_name = label_encoder.inverse_transform([int(y_pred[0])])[0]
-        st.success(f"🎶 Recommended Song: **{song_name}**")
+        # --- Get artist for the predicted song
+        # Expecting song_metadata to have columns: 'Song_Name', 'Artist'
+        song_row = song_metadata[song_metadata['Song_Name'] == song_name]
+        if not song_row.empty:
+            artist_name = song_row['Artist'].values[0]
+            st.success(f"🎶 Recommended Song: {song_name} by {artist_name}")
+        else:
+            st.success(f"🎶 Recommended Song: {song_name} (artist unknown)")
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
 
