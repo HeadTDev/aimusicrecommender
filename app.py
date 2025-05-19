@@ -14,15 +14,10 @@ def load_model_objects():
     tfidf = joblib.load('models/tfidf_vectorizer.pkl')
     expected_columns = joblib.load('models/expected_columns.pkl')
     # Load song metadata: dataframe with columns ['Song_Name', 'Artist']
-    song_metadata = pd.read_csv('models/song_metadata.csv')  # <-- Ensure this file exists
+    song_metadata = pd.read_csv('models/song_metadata.csv')  # <-- Ensure this file exists and is up to date
     return rf_clf, xgb_clf, lgbm_clf, label_encoder, mood_encoder, tfidf, expected_columns, song_metadata
 
 rf_clf, xgb_clf, lgbm_clf, label_encoder, mood_encoder, tfidf, expected_columns, song_metadata = load_model_objects()
-
-# --- Genre Dropdown Options ---
-genre_names = [
-    'Ambient', 'Classical', 'Funk', 'Hip-Hop', 'Pop', 'Rock'
-]
 
 # --- UI Header ---
 st.title("🎵 Song Recommendation App")
@@ -32,10 +27,9 @@ st.write("Get a song recommendation based on your current mood and preferences!"
 with st.form(key='input_form'):
     user_text = st.text_input("How do you feel? (Describe your mood)", value="I'm feeling happy and energetic!")
     
-    # Artist free text
+    # Artist and Genre options (suggest user to type, or populate from training set if available)
     user_artist = st.text_input("Who is your favorite artist?", value="Coldplay")
-    # Genre dropdown
-    user_genre = st.selectbox("Preferred genre?", genre_names)
+    user_genre = st.text_input("Preferred genre?", value="Pop")
     
     user_tempo = st.number_input("Tempo (BPM):", min_value=40, max_value=220, value=120, step=1)
     user_energy = st.slider("Energy (0.0 = calm, 1.0 = energetic):", min_value=0.0, max_value=1.0, value=0.7, step=0.01)
@@ -109,8 +103,8 @@ if submit_button:
         # Predict
         y_pred = clf.predict(X_input)
         song_name = label_encoder.inverse_transform([int(y_pred[0])])[0]
-        # --- Get artist for the predicted song
-        # Expecting song_metadata to have columns: 'Song_Name', 'Artist'
+
+        # Find the artist for the recommended song
         song_row = song_metadata[song_metadata['Song_Name'] == song_name]
         if not song_row.empty:
             artist_name = song_row['Artist'].values[0]
